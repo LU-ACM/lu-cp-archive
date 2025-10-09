@@ -39,7 +39,7 @@ export default function Home() {
           <Button
             variant="secondary"
             size="lg"
-            className="py-8 font-mono text-xl font-bold"
+            className="px-6 py-8 font-mono text-xl font-bold"
             disabled={status === "loading"}
             asChild
           >
@@ -49,7 +49,7 @@ export default function Home() {
           <Button
             variant="outline"
             size="lg"
-            className="py-8 font-mono text-xl font-bold"
+            className="px-6 py-8 font-mono text-xl font-bold"
             onClick={handleClick}
             disabled={status === "loading"}
           >
