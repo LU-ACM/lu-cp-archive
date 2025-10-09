@@ -133,8 +133,9 @@ function calculateSolvePoints(
   userMaxRating: number,
   solveRating: number
 ): number {
+  const weight = solveRating / 1000;
   const diff = solveRating - userMaxRating;
-  return Math.max(20, Math.min(200, diff));
+  return Math.max(20, Math.min(200, diff)) * weight;
 }
 
 export function computeInitialScore(cfUserData: UserCFData[]) {
