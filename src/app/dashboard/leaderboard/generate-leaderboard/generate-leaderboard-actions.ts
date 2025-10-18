@@ -93,10 +93,11 @@ async function publishGeneratedLeaderboard(
       rank: entry.rank,
     }));
 
-    await prisma.$transaction([
-      prisma.leaderboards.createMany({ data: dataToInsert }),
-      prisma.monthly_leaderboard.deleteMany(),
-    ]);
+    await prisma.$transaction(async (tx) => {
+      await tx.leaderboards.createMany({ data: dataToInsert });
+      await tx.monthly_leaderboard.deleteMany();
+      await tx.monthly_leaderboard.createMany({ data: dataToInsert });
+    });
 
     return { success: true };
   } catch (error) {
