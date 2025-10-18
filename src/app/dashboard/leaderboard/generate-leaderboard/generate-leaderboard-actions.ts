@@ -93,10 +93,26 @@ async function publishGeneratedLeaderboard(
       rank: entry.rank,
     }));
 
+    const monthlyDataToInsert = dataToInsert.map(
+      ({
+        user_id,
+        generated_points,
+        additional_points,
+        total_points,
+        rank,
+      }) => ({
+        user_id,
+        generated_points,
+        additional_points,
+        total_points,
+        rank,
+      })
+    );
+
     await prisma.$transaction(async (tx) => {
       await tx.leaderboards.createMany({ data: dataToInsert });
       await tx.monthly_leaderboard.deleteMany();
-      await tx.monthly_leaderboard.createMany({ data: dataToInsert });
+      await tx.monthly_leaderboard.createMany({ data: monthlyDataToInsert });
     });
 
     return { success: true };
