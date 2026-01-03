@@ -1,10 +1,268 @@
+import Image from "next/image";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import CodeBlock from "@/components/shared/code-block";
+import UserTypeBadge from "@/components/shared/user-type-badge"
 
 <MaxWidthWrapper className="my-10">
 
-# Coming Soon
+# User Guide
 
-Full user guide and documentation is coming soon...
+Welcome to the **Leading University Competitive Programming Archive**. This comprehensive guide will help you navigate and make the most of our platform.
+
+---
+
+## Getting Started
+
+Before you can access all features, you need to create an account:
+
+1. Click the **"Get Started / Login"** button on the home page
+2. Sign in using your **GitHub** account
+3. That's it! ✨
+
+---
+
+## User Types
+
+There are 3 types of users in LU-CP-Archive:
+
+1. <UserTypeBadge user_type="STANDARD" /> **User** — Default user type for all new users
+2. <UserTypeBadge user_type="POWER" /> **User** — Assigned by admins for trusted contributors
+3. <UserTypeBadge user_type="ADMIN" /> **User** — Full platform access and moderation capabilities
+
+Your account type determines which features and actions you can access on the platform.
+
+## Dashboard Overview
+
+The dashboard is your command center, providing quick access to all platform features.
+
+<Image
+  src="/user-guide/dashboard.png"
+  alt="Dashboard Overview"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{
+    width: "100%",
+    height: "auto",
+  }}
+  className="rounded-md"
+/>
+
+### Available Features
+
+| Feature | Description |
+|---------|-------------|
+| **Topic Wise** | Browse and solve problems organized by algorithm topics |
+| **Codeforces Ladder** | Progress through Codeforces problems by difficulty level |
+| **Leaderboard** | View competitive rankings of LU programmers |
+| **Intra LU Contests** | Access problems from previous LU onsite contests |
+| **Short Contests** | Participate in time-limited contests organized by LU |
+| **Marathon Contests** | Engage in extended contests for comprehensive practice |
+
+The following sections explain each feature and how to use them based on your user type.
+
+---
+
+## Profile Management
+
+Manage your account settings, achievements, and Codeforces integration from your profile page.
+
+<Image
+  src="/user-guide/profile.png"
+  alt="Profile"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{
+    width: "100%",
+    height: "auto",
+  }}
+  className="rounded-md"
+/>
+
+### Standard User & Power User Features
+
+**<UserTypeBadge user_type="STANDARD" /> Users & <UserTypeBadge user_type="POWER" /> Users** can:
+- View their contribution statistics
+- Connect and manage their Codeforces handle
+- Control their leaderboard visibility with the **"Appear on Leaderboard"** toggle
+
+### Admin Features
+
+**<UserTypeBadge user_type="ADMIN" /> Users** can:
+- Do everything Standard and Power users can do
+- Manage other users' roles:
+  - Promote users from Standard to Power
+  - Demote users from Power to Standard
+  - Step down from admin role to become a Standard user
+
+<Image
+  src="/user-guide/admin-profile.png"
+  alt="Admin Profile"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{
+    width: "100%",
+    height: "auto",
+  }}
+  className="rounded-md"
+/>   
+
+---
+
+## Topic Wise Problems
+
+Practice problems organized by algorithmic topics for structured learning.
+
+<Image
+  src="/user-guide/topic-wise.png"
+  alt="Topic Wise Problems"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{
+    width: "100%",
+    height: "auto",
+  }}
+  className="rounded-md"
+/>
+
+### Permissions by User Type
+
+- <UserTypeBadge user_type="STANDARD" /> **Users** — Can browse and view topics (read-only access)
+- <UserTypeBadge user_type="POWER" /> **Users** — Can submit new topics in addition to standard access
+- <UserTypeBadge user_type="ADMIN" /> **Users** — Can review, approve, modify, or delete submitted topics and existing topic cards
+
+---
+
+## Individual Topic Pages
+
+Each topic has a dedicated page where users can manage and solve problems based on their role.
+
+<Image
+  src="/user-guide/topic.png"
+  alt="Topic Problems"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{
+    width: "100%",
+    height: "auto",
+  }}
+  className="rounded-md"
+/>
+
+### Permissions by User Type
+
+**<UserTypeBadge user_type="STANDARD" /> Users** can:
+- Submit new problems
+- Update problem status ("Done", "In Progress", "Skipped")
+- Filter problems by difficulty ("Easy", "Medium", "Hard")
+- Track personal progress
+
+**<UserTypeBadge user_type="POWER" /> Users & <UserTypeBadge user_type="ADMIN" /> Users** can:
+- Do everything Standard users can do
+- Review and approve problems submitted by other users
+- Modify or delete existing problems
+
+---
+
+## Codeforces Ladder
+
+Progress through Codeforces problems systematically by difficulty level, from beginner to advanced.
+
+<Image
+  src="/user-guide/cf-ladder.png"
+  alt="Codeforces Ladder"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{
+    width: "100%",
+    height: "auto",
+  }}
+  className="rounded-md"
+/>
+
+### Permissions by User Type
+
+**<UserTypeBadge user_type="STANDARD" /> Users** can:
+- Submit problems based on Codeforces difficulty level
+- View problem-solving status if they've added their Codeforces handle to their profile
+  - Solved problems appear with a <span className="bg-green-500 rounded-sm p-1">green</span> background
+  - Unsolved problems have a default background
+
+**<UserTypeBadge user_type="POWER" /> Users & <UserTypeBadge user_type="ADMIN" /> Users** can:
+- Do everything Standard users can do
+- Review and approve problems submitted by other users
+- Modify or delete existing problems
+
+---
+
+## Contests
+
+The platform offers three types of competitive contests:
+
+- **Intra LU Contests** — Problems from competitive programming contests organized within LU
+- **Short Contests** — Focused, time-limited competitions organized by LU Problem Solvers
+- **Marathon Contests** — Extended competitions for comprehensive practice organized by LU Problem Solvers
+
+### Permissions by User Type
+
+**<UserTypeBadge user_type="STANDARD" /> Users** can:
+- Submit contests
+- Update contest status ("Done", "In Progress", "Skipped")
+- Filter contests by difficulty ("Easy", "Medium", "Hard")
+
+**<UserTypeBadge user_type="POWER" /> Users & <UserTypeBadge user_type="ADMIN" /> Users** can:
+- Do everything Standard users can do
+- Review and approve contests submitted by other users
+- Modify or delete existing contests
+
+---
+
+## Leaderboard
+
+The leaderboard ranks users based on their competitive programming performance, primarily on Codeforces. For detailed information about how leaderboard points are calculated, visit this [article](https://www.facebook.com/share/p/1BZjtuzQD8/).
+
+<Image
+  src="/user-guide/leaderboard.png"
+  alt="Leaderboard"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{
+    width: "100%",
+    height: "auto",
+  }}
+  className="rounded-md"
+/>
+
+### Permissions by User Type
+
+**<UserTypeBadge user_type="STANDARD" /> Users & <UserTypeBadge user_type="POWER" /> Users** can:
+- Participate on the leaderboard by:
+  - Adding their Codeforces handle in their profile
+  - Enabling the "Appear on Leaderboard" option
+
+**<UserTypeBadge user_type="ADMIN" /> Users** can:
+- Do everything Standard and Power users can do
+- Generate and maintain the leaderboard (see the `Generate Leaderboard` page for more details)
+
+---
+
+## Contribution & Support
+
+**LU-CP-Archive** is an open-source project. We welcome contributions from the community!
+
+### Get Involved
+
+- **Contribute on GitHub** — Help us improve the platform by contributing code and features: [GitHub Repository](https://github.com/Iftekhar-Ifat/lu-cp-archive)
+- **Contact & Inquiries** — For questions or support, reach out through the platform or visit the official **LU-ACM** Facebook page: [LU-ACM](https://www.facebook.com/profile.php?id=61572507621970)
+
+---
+
+*Last Updated: January 3, 2026*
 
 </MaxWidthWrapper>
