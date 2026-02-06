@@ -95,30 +95,6 @@ npx prisma db seed # Seed data
 - **Docs:** [Next.js](https://nextjs.org/docs), [Prisma](https://prisma.io/docs)
 - **Community:** [LU-ACM Facebook](https://www.facebook.com/profile.php?id=61572507621970)
 
-## Troubleshooting
-
-**Database connection error:**
-
-```bash
-# Check PostgreSQL is running and DATABASE_URL is correct
-psql -c "SELECT 1"
-```
-
-**Prisma client issues:**
-
-```bash
-npx prisma generate
-rm -rf node_modules/.prisma
-npm install
-```
-
-**Build errors:**
-
-```bash
-rm -rf .next
-npm run build
-```
-
 ## License
 
 Open source - see LICENSE file for details.
