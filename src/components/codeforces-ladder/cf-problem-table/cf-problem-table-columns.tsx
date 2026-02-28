@@ -77,6 +77,11 @@ export const cf_problem_columns: ColumnDef<CFProblem>[] = [
 
 export const approve_cf_problem_columns: ColumnDef<CFProblem>[] = [
   {
+    id: "serial",
+    header: "No",
+    cell: ({ row }) => row.index + 1,
+  },
+  {
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => {

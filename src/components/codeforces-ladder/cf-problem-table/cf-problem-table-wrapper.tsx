@@ -75,6 +75,7 @@ export default function CFProblemTableWrapper({
       columns={cf_problem_columns}
       data={cfProblemData?.data ?? []}
       total={cfProblemData?.total ?? 0}
+      showPagination={true}
       pageIndex={pageIndex}
       pageSize={pageSize}
       isFetching={isPlaceholderData}

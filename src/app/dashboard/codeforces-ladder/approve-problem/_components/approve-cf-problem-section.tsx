@@ -37,6 +37,7 @@ export default function ApproveCFProblemSection() {
         <CFProblemTable
           columns={approve_cf_problem_columns}
           data={unapprovedCFproblems}
+          showPagination={false}
         />
       </div>
     </div>
