@@ -11,6 +11,14 @@ import {
 
 export const cf_problem_columns: ColumnDef<CFProblem>[] = [
   {
+    id: "serial",
+    header: "No",
+    cell: ({ row, table }) => {
+      const { pageIndex, pageSize } = table.getState().pagination;
+      return pageIndex * pageSize + row.index + 1;
+    },
+  },
+  {
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => {

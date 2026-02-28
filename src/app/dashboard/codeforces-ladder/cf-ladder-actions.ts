@@ -13,8 +13,10 @@ import { getUserData } from "@/components/shared-actions/actions";
 import { hasPermission } from "@/utils/permissions";
 
 async function getCFProblemsByDifficulty(
-  difficultyLevel: number
-): Promise<ActionResult<CFProblem[]>> {
+  difficultyLevel: number,
+  page: number = 0,
+  pageSize: number = 50
+): Promise<ActionResult<{ data: CFProblem[]; total: number }>> {
   const validationDifficulty = CFDifficultyLevelsSchema.safeParse({
     difficulty: difficultyLevel,
   });
@@ -22,20 +24,20 @@ async function getCFProblemsByDifficulty(
   if (validationDifficulty.error) {
     return { error: "Invalid difficulty level" };
   }
+
   try {
-    const rawCFProblems = await prisma.cf_problems.findMany({
-      where: { difficulty_level: difficultyLevel, approved: true },
-      orderBy: {
-        created_at: "asc",
-      },
-      include: {
-        addedBy: {
-          select: {
-            user_name: true,
-          },
-        },
-      },
-    });
+    const [rawCFProblems, total] = await prisma.$transaction([
+      prisma.cf_problems.findMany({
+        where: { difficulty_level: difficultyLevel, approved: true },
+        orderBy: { created_at: "asc" },
+        skip: page * pageSize,
+        take: pageSize,
+        include: { addedBy: { select: { user_name: true } } },
+      }),
+      prisma.cf_problems.count({
+        where: { difficulty_level: difficultyLevel, approved: true },
+      }),
+    ]);
 
     const cfProblems = rawCFProblems.map((problem) => ({
       ...problem,
@@ -43,12 +45,11 @@ async function getCFProblemsByDifficulty(
     }));
 
     const validateData = z.array(CFProblemSchema).safeParse(cfProblems);
-
     if (validateData.error) {
       return { error: "Invalid codeforces problem data" };
     }
 
-    return { data: cfProblems };
+    return { data: { data: cfProblems, total } };
   } catch (err) {
     console.error("Error fetching codeforces problems:", err);
     return { error: "Failed to fetch codeforces problems" };

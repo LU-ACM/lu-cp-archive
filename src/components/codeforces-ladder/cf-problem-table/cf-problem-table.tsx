@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
 import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination";
+import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
@@ -23,6 +31,11 @@ import { useStrictSession } from "@/hooks/use-strict-session";
 interface CFProblemTableProps<TData extends CFProblem, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  total: number;
+  pageIndex: number;
+  pageSize: number;
+  isFetching: boolean;
+  onPaginationChange: (pageIndex: number) => void;
   difficultyLevel?: number;
   cf_handle?: string;
 }
@@ -32,6 +45,11 @@ export function CFProblemTable<TValue>({
   data,
   difficultyLevel,
   cf_handle,
+  total,
+  pageIndex,
+  pageSize,
+  isFetching,
+  onPaginationChange,
 }: CFProblemTableProps<CFProblem, TValue>) {
   const session = useStrictSession();
   const hasMutatePermission = hasPermission(
@@ -46,11 +64,18 @@ export function CFProblemTable<TValue>({
   const table = useReactTable({
     data,
     columns,
-    state: {
-      columnVisibility,
+    pageCount: Math.ceil(total / pageSize),
+    manualPagination: true,
+    state: { pagination: { pageIndex, pageSize }, columnVisibility },
+    onPaginationChange: (updater) => {
+      const newState =
+        typeof updater === "function"
+          ? updater({ pageIndex, pageSize })
+          : updater;
+      onPaginationChange(newState.pageIndex);
     },
-    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
   });
 
   const [solvedProblems, setSolvedProblems] = useState<Set<string>>(new Set());
@@ -74,54 +99,104 @@ export function CFProblemTable<TValue>({
   }, [data, difficultyLevel, cf_handle]);
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => {
-              const isSolved = solvedProblems.has(row.original.id);
-              return (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className={isSolved ? "bg-green-500 dark:bg-green-600" : ""}
+    <div>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => {
+                const isSolved = solvedProblems.has(row.original.id);
+                return (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className={isSolved ? "bg-green-500 dark:bg-green-600" : ""}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex justify-self-end py-4">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => table.previousPage()}
+                aria-disabled={!table.getCanPreviousPage()}
+                className={
+                  !table.getCanPreviousPage()
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+              />
+            </PaginationItem>
+
+            {Array.from({ length: table.getPageCount() }).map((_, index) => {
+              const isActive = index === table.getState().pagination.pageIndex;
+
+              return (
+                <PaginationItem key={index}>
+                  <PaginationLink
+                    isActive={isActive}
+                    onClick={() => table.setPageIndex(index)}
+                    className="cursor-pointer"
+                  >
+                    {index + 1}
+                  </PaginationLink>
+                </PaginationItem>
               );
-            })
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            })}
+
+            <PaginationItem>
+              <PaginationNext
+                onClick={() => table.nextPage()}
+                aria-disabled={!table.getCanNextPage()}
+                className={
+                  !table.getCanNextPage()
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </div>
   );
 }
