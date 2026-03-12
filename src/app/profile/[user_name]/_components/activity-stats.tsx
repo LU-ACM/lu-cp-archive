@@ -47,7 +47,7 @@ export default function ActivityStats({ userData }: { userData: users }) {
     isLoading ? <Skeleton className="h-10 w-24" /> : value;
 
   return (
-    <Card className="transition-all duration-300 hover:shadow-md">
+    <Card>
       <CardHeader>
         <div className="flex items-center gap-2">
           <div className="rounded bg-accent p-2">

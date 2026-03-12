@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import UserManagement from "./_components/user-management";
 import { auth } from "@/lib/auth";
 import { hasPermission } from "@/utils/permissions";
+import Achievements from "./_components/achievements";
 
 export default async function Profile({
   params,
@@ -40,6 +41,9 @@ export default async function Profile({
         <div className="grid gap-6 md:grid-cols-2">
           <ActivityStats userData={user.data} />
           <CodeforcesSettings userData={user.data} />
+          <div className="md:col-span-2">
+            <Achievements />
+          </div>
         </div>
         {hasViewPermission && isOwner && (
           <div className="my-6">
