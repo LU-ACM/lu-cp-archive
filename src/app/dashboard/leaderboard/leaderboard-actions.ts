@@ -127,7 +127,6 @@ async function getAchievementsByMonthYear(month: number, year: number) {
   try {
     const achievements = await prisma.achievements.findMany({
       where: { month, year },
-      select: { title: true },
     });
 
     return { success: true, data: achievements };

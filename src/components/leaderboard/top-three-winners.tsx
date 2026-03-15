@@ -7,22 +7,21 @@ import Link from "next/link";
 import { DropdownMenu, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import AchievementAssignDropdown from "./achievement-assign-dropdown";
-import { type AchievementType } from "@/types/types";
-
-// For context: type AchievementType = "CHAMPION" | "FIRST_RUNNER_UP" | "SECOND_RUNNER_UP" | "BEST_FEMALE_PROGRAMMER"
+import { type achievements } from "@prisma/client";
+import LBAchievementBadge from "./lb-achievement-badge";
 
 export default function TopThreeWinners({
   winners,
   canAssignAchievements,
   showAchievementBadge,
   leaderboardDate,
-  assignedTitles,
+  achievements,
 }: {
   winners: Leaderboard[];
   canAssignAchievements: boolean;
   showAchievementBadge: boolean;
   leaderboardDate: Date;
-  assignedTitles: AchievementType[] | [];
+  achievements: achievements[] | [];
 }) {
   const sortedWinners = [...winners].sort((a, b) => a.rank - b.rank);
   const [firstPlace, secondPlace, thirdPlace] = sortedWinners.slice(0, 3);
@@ -37,7 +36,7 @@ export default function TopThreeWinners({
             size="md"
             hasAchievementChangePermission={canAssignAchievements}
             leaderboardDate={leaderboardDate}
-            assignedTitles={assignedTitles}
+            achievements={achievements}
           />
         )}
       </div>
@@ -50,7 +49,7 @@ export default function TopThreeWinners({
             size="lg"
             hasAchievementChangePermission={canAssignAchievements}
             leaderboardDate={leaderboardDate}
-            assignedTitles={assignedTitles}
+            achievements={achievements}
           />
         )}
       </div>
@@ -63,7 +62,7 @@ export default function TopThreeWinners({
             size="md"
             hasAchievementChangePermission={canAssignAchievements}
             leaderboardDate={leaderboardDate}
-            assignedTitles={assignedTitles}
+            achievements={achievements}
           />
         )}
       </div>
@@ -77,7 +76,7 @@ type WinnerCardProps = {
   size: "md" | "lg";
   hasAchievementChangePermission: boolean;
   leaderboardDate: Date;
-  assignedTitles: AchievementType[] | [];
+  achievements: achievements[] | [];
 };
 
 function WinnerCard({
@@ -86,7 +85,7 @@ function WinnerCard({
   size,
   hasAchievementChangePermission,
   leaderboardDate,
-  assignedTitles,
+  achievements,
 }: WinnerCardProps) {
   const isLarge = size === "lg";
 
@@ -130,7 +129,7 @@ function WinnerCard({
               winner={winner}
               year={leaderboardDate.getFullYear()}
               month={leaderboardDate.getMonth() + 1}
-              assignedTitles={assignedTitles}
+              assignedTitles={achievements.map((item) => item.title)}
             />
           </DropdownMenu>
         </div>
@@ -166,26 +165,22 @@ function WinnerCard({
         >
           {winner.user.name}
         </h3>
-        <Badge
-          variant="secondary"
-          className="mb-3 w-fit max-w-full truncate px-2 py-1 text-xs hover:scale-[1.02]"
-        >
-          {winner.rank}
-        </Badge>
 
         <Link href={`/profile/@${winner.user.user_name}`}>
           <Badge
             variant="secondary"
-            className="mb-3 w-fit max-w-full truncate px-2 py-1 text-xs hover:scale-[1.02]"
+            className="mb-1 w-fit max-w-full truncate px-2 py-1 text-xs hover:scale-[1.02]"
           >
             @{winner.user.user_name}
           </Badge>
         </Link>
-
         <div
           className={`font-mono font-bold ${variantStyle.text} ${isLarge ? "text-3xl" : "text-2xl"}`}
         >
           {winner.total_points}
+        </div>
+        <div className="my-1">
+          <LBAchievementBadge achievements={achievements} winner={winner} />
         </div>
       </CardContent>
     </Card>

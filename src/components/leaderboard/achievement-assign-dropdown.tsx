@@ -45,7 +45,7 @@ export default function AchievementAssignDropdown({
   winner: Leaderboard;
   month: number;
   year: number;
-  assignedTitles: AchievementType[] | [] | undefined;
+  assignedTitles: AchievementType[] | [];
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [existingTitles, setExistingTitles] = useState<AchievementType[]>(

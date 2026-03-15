@@ -64,7 +64,7 @@ export default function LeaderboardTableWrapper({
     staleTime: Infinity,
   });
 
-  const { data: assignedTitles, isLoading: achievementLoading } = useQuery({
+  const { data: achievements, isLoading: achievementsLoading } = useQuery({
     queryKey: [
       "achievements",
       `${leaderboardDate.getFullYear()}-${leaderboardDate.getMonth() + 1}`,
@@ -78,13 +78,13 @@ export default function LeaderboardTableWrapper({
 
       if (!unwrappedResult) return undefined;
 
-      return unwrappedResult.map((item) => item.title);
+      return unwrappedResult;
     },
     staleTime: Infinity,
     enabled: canAssignAchievements,
   });
 
-  if (isLoading || achievementLoading || !leaderboardDate) {
+  if (isLoading || achievementsLoading || !leaderboardDate) {
     return <Loading />;
   }
 
@@ -113,7 +113,7 @@ export default function LeaderboardTableWrapper({
           canAssignAchievements={canAssignAchievements}
           leaderboardDate={leaderboardDate}
           showAchievementBadge={isPreviousLB}
-          assignedTitles={assignedTitles ?? []}
+          achievements={achievements || []}
         />
       </div>
       <LeaderboardTable
