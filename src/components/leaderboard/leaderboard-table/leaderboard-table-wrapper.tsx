@@ -112,7 +112,6 @@ export default function LeaderboardTableWrapper({
           winners={leaderboardData.topThree}
           canAssignAchievements={canAssignAchievements}
           leaderboardDate={leaderboardDate}
-          showAchievementBadge={isPreviousLB}
           achievements={achievements || []}
         />
       </div>

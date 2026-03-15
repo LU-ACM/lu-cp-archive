@@ -226,5 +226,5 @@ model achievements {
 
   user users @relation(fields: [user_id], references: [id])
 
-  @@unique([user_id, title, month, year])
+  @@unique([title, month, year])
 }

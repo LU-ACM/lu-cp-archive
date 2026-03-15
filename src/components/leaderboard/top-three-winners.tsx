@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -7,22 +9,47 @@ import Link from "next/link";
 import { DropdownMenu, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import AchievementAssignDropdown from "./achievement-assign-dropdown";
-import { type achievements } from "@prisma/client";
 import LBAchievementBadge from "./lb-achievement-badge";
+import { type achievements } from "@prisma/client";
+import { type AchievementType } from "@/types/types";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+
+type AssignedAchievement = {
+  title: AchievementType;
+  user_id: string;
+};
 
 export default function TopThreeWinners({
   winners,
   canAssignAchievements,
-  showAchievementBadge,
   leaderboardDate,
   achievements,
 }: {
   winners: Leaderboard[];
   canAssignAchievements: boolean;
-  showAchievementBadge: boolean;
   leaderboardDate: Date;
-  achievements: achievements[] | [];
+  achievements: achievements[] | undefined;
 }) {
+  const queryClient = useQueryClient();
+
+  const [existingTitles, setExistingTitles] = useState<AssignedAchievement[]>(
+    achievements?.map((item) => ({
+      title: item.title as AchievementType,
+      user_id: item.user_id,
+    })) ?? []
+  );
+
+  function handleAssigned(newAchievement: AssignedAchievement) {
+    setExistingTitles((prev) => [...prev, newAchievement]);
+    queryClient.invalidateQueries({
+      queryKey: [
+        "achievements",
+        `${leaderboardDate.getFullYear()}-${leaderboardDate.getMonth() + 1}`,
+      ],
+    });
+  }
+
   const sortedWinners = [...winners].sort((a, b) => a.rank - b.rank);
   const [firstPlace, secondPlace, thirdPlace] = sortedWinners.slice(0, 3);
 
@@ -36,11 +63,12 @@ export default function TopThreeWinners({
             size="md"
             hasAchievementChangePermission={canAssignAchievements}
             leaderboardDate={leaderboardDate}
-            achievements={achievements}
+            achievements={achievements ?? []}
+            existingTitles={existingTitles}
+            onAssigned={handleAssigned}
           />
         )}
       </div>
-
       <div className="order-1 md:order-2">
         {firstPlace && (
           <WinnerCard
@@ -49,11 +77,12 @@ export default function TopThreeWinners({
             size="lg"
             hasAchievementChangePermission={canAssignAchievements}
             leaderboardDate={leaderboardDate}
-            achievements={achievements}
+            achievements={achievements ?? []}
+            existingTitles={existingTitles}
+            onAssigned={handleAssigned}
           />
         )}
       </div>
-
       <div className="order-3">
         {thirdPlace && (
           <WinnerCard
@@ -62,7 +91,9 @@ export default function TopThreeWinners({
             size="md"
             hasAchievementChangePermission={canAssignAchievements}
             leaderboardDate={leaderboardDate}
-            achievements={achievements}
+            achievements={achievements ?? []}
+            existingTitles={existingTitles}
+            onAssigned={handleAssigned}
           />
         )}
       </div>
@@ -76,7 +107,9 @@ type WinnerCardProps = {
   size: "md" | "lg";
   hasAchievementChangePermission: boolean;
   leaderboardDate: Date;
-  achievements: achievements[] | [];
+  achievements: achievements[];
+  existingTitles: AssignedAchievement[];
+  onAssigned: (achievement: AssignedAchievement) => void;
 };
 
 function WinnerCard({
@@ -86,6 +119,8 @@ function WinnerCard({
   hasAchievementChangePermission,
   leaderboardDate,
   achievements,
+  existingTitles,
+  onAssigned,
 }: WinnerCardProps) {
   const isLarge = size === "lg";
 
@@ -93,19 +128,19 @@ function WinnerCard({
     first: {
       badge: "bg-rose-500 text-rose-900",
       text: "text-rose-500",
-      glow: "0 0 20px rgba(244, 63, 94, 1)", // rose-500 glow
+      glow: "0 0 20px rgba(244, 63, 94, 1)",
       avatarBorder: "border-rose-500",
     },
     second: {
       badge: "bg-cyan-500 text-cyan-900",
       text: "text-cyan-500",
-      glow: "0 0 20px rgba(14, 165, 233, 1)", // sky-500 glow
+      glow: "0 0 20px rgba(14, 165, 233, 1)",
       avatarBorder: "border-cyan-500",
     },
     third: {
       badge: "bg-lime-500 text-lime-900",
       text: "text-lime-500",
-      glow: "0 0 20px rgba(34, 197, 94, 1)", // green-500 glow
+      glow: "0 0 20px rgba(34, 197, 94, 1)",
       avatarBorder: "border-lime-500",
     },
   };
@@ -129,7 +164,8 @@ function WinnerCard({
               winner={winner}
               year={leaderboardDate.getFullYear()}
               month={leaderboardDate.getMonth() + 1}
-              assignedTitles={achievements.map((item) => item.title)}
+              existingTitles={existingTitles}
+              onAssigned={onAssigned}
             />
           </DropdownMenu>
         </div>
@@ -141,13 +177,10 @@ function WinnerCard({
           >
             {winner.rank}
           </Badge>
-
           <div className="relative">
             <Avatar
               className={`${isLarge ? "h-28 w-28" : "h-24 w-24"} border-2 ${variantStyle.avatarBorder}`}
-              style={{
-                boxShadow: variantStyle.glow,
-              }}
+              style={{ boxShadow: variantStyle.glow }}
             >
               <AvatarImage
                 src={winner.user.image ?? undefined}
@@ -165,7 +198,6 @@ function WinnerCard({
         >
           {winner.user.name}
         </h3>
-
         <Link href={`/profile/@${winner.user.user_name}`}>
           <Badge
             variant="secondary"

@@ -6,6 +6,7 @@ import {
   leaderboardDataSchema,
   leaderboardDateSchema,
 } from "@/utils/schema/leaderboard";
+import { AchievementTitle } from "@prisma/client";
 import { z } from "zod";
 
 async function getLeaderboard(selectedMonth: number, selectedYear: number) {
@@ -92,6 +93,28 @@ async function addAchievement(
 
     if (validateData.error) {
       return { error: "Invalid data type" };
+    }
+
+    const RANKED_TITLES = AchievementTypeSchema.options.filter(
+      (title) => title !== "BEST_FEMALE_PROGRAMMER"
+    );
+
+    // If assigning a ranked title, check if user already has one
+    if ((RANKED_TITLES as AchievementType[]).includes(title)) {
+      const existingRankedTitle = await prisma.achievements.findFirst({
+        where: {
+          user_id: userId,
+          month,
+          year,
+          title: { in: RANKED_TITLES }, // check if user already has ANY ranked title except Best Female
+        },
+      });
+
+      if (existingRankedTitle) {
+        return {
+          error: `User already has the ${existingRankedTitle.title} title for this month`,
+        };
+      }
     }
 
     // Get start/end dates from the leaderboard entry for that month/year

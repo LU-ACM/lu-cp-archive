@@ -35,19 +35,27 @@ export default function LBAchievementBadge({
   winner: Leaderboard;
   className?: string;
 }) {
-  const userAchievement = achievements.find(
+  const userAchievements = achievements.filter(
     (a) => a.user_id === winner.user.id
   );
 
-  if (!userAchievement) return null;
-
-  const config = achievementConfig[userAchievement.title];
-
-  if (!config) return null;
+  if (userAchievements.length === 0) return null;
 
   return (
-    <Badge className={cn("pointer-events-none", config.style, className)}>
-      {config.label}
-    </Badge>
+    <div className="flex flex-col items-center gap-1">
+      {userAchievements.map((achievement) => {
+        const config = achievementConfig[achievement.title];
+        if (!config) return null;
+
+        return (
+          <Badge
+            key={achievement.title}
+            className={cn("pointer-events-none w-fit", config.style, className)}
+          >
+            {config.label}
+          </Badge>
+        );
+      })}
+    </div>
   );
 }

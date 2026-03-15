@@ -1,8 +1,10 @@
 import { type SearchParams } from "@/app/dashboard/leaderboard/page";
+import { type AchievementType, AchievementTypeSchema } from "@/types/types";
 import {
   type LeaderboardDateType,
   type Leaderboard,
 } from "@/utils/schema/leaderboard";
+import { type AssignedAchievement } from "./achievement-assign-dropdown";
 
 export function isolateTopThree(leaderboard: Leaderboard[]) {
   const topThree = leaderboard.slice(0, 3);
@@ -40,4 +42,26 @@ export function formattedLBDates(
     latestLBDate,
     otherLBDates,
   };
+}
+
+export function isTitleDisabled(
+  title: AchievementType,
+  existingTitles: AssignedAchievement[],
+  winnerId: string
+): boolean {
+  const RANKED_TITLES = AchievementTypeSchema.options.filter(
+    (title) => title !== "BEST_FEMALE_PROGRAMMER"
+  );
+  if (existingTitles.find((a) => a.title === title)) return true;
+
+  if ((RANKED_TITLES as AchievementType[]).includes(title)) {
+    const winnerHasRankedTitle = existingTitles.some(
+      (a) =>
+        a.user_id === winnerId &&
+        (RANKED_TITLES as AchievementType[]).includes(a.title)
+    );
+    if (winnerHasRankedTitle) return true;
+  }
+
+  return false;
 }
