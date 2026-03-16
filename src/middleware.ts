@@ -7,6 +7,7 @@ const PUBLIC_ROUTES = [
   /^\/api\/auth\/.*/,
   "/user-guide",
   "/dashboard/leaderboard",
+  /^\/profile\/@[^/]+\/achievements$/,
 ];
 
 const isPublicRoute = (pathname: string) => {

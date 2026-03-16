@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Medal, X } from "lucide-react";
+import { Check, Medal, Share2, X } from "lucide-react";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { unwrapActionResult } from "@/utils/error-helper";
@@ -20,8 +20,13 @@ import { type AchievementType } from "@/types/types";
 import { format } from "date-fns";
 import Loading from "@/components/shared/loading";
 import { getUserAchievements } from "../profile-actions";
-import { type User } from "next-auth";
 import NoData from "@/components/shared/no-data";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { type users } from "@prisma/client";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { toast } from "sonner";
 
 const ACHIEVEMENT_IMAGE_MAP: Record<AchievementType, string> = {
   CHAMPION: "/assets/champion.svg",
@@ -44,7 +49,9 @@ const ACHIEVEMENT_LABEL_MAP: Record<AchievementType, string> = {
   BEST_FEMALE_PROGRAMMER: "Best Female Programmer",
 };
 
-export default function Achievements({ user }: { user: User }) {
+export default function Achievements({ user }: { user: users }) {
+  const pathname = usePathname();
+
   const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -86,6 +93,8 @@ export default function Achievements({ user }: { user: User }) {
     staleTime: Infinity,
   });
 
+  const [copy, isCopied] = useCopyToClipboard();
+
   const handleBadgeClick = (badge: Badge) => {
     setSelectedBadge(badge);
     setDialogOpen(true);
@@ -104,6 +113,22 @@ export default function Achievements({ user }: { user: User }) {
             <CardTitle className="text-xl font-semibold">
               Achievements
             </CardTitle>
+
+            <div className="flex w-full justify-end">
+              <Button
+                variant="outline"
+                onClick={() =>
+                  copy(
+                    `${window.location.origin}${pathname}/achievements`
+                  ).then(() =>
+                    toast.success("Link is copied to your clipboard.")
+                  )
+                }
+              >
+                {isCopied ? <Check className="text-emerald-500" /> : <Share2 />}
+                Share
+              </Button>
+            </div>
           </div>
           <CardDescription className="text-sm">
             Badges and milestones you&apos;ve earned
