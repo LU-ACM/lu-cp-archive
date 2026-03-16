@@ -4,7 +4,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2, X } from "lucide-react";
 import { useRef, useState } from "react";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { Icons } from "@/components/icons";
 import { type User } from "next-auth";
 
@@ -12,11 +12,11 @@ export type Badge = {
   id: number;
   title: string;
   period: string;
-  image: string;
+  image: StaticImageData;
   color: string;
   extraBadge?: {
     title: string;
-    image: string;
+    image: StaticImageData;
     color: string;
   };
 };

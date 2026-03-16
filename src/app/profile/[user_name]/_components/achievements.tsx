@@ -22,17 +22,21 @@ import Loading from "@/components/shared/loading";
 import { getUserAchievements } from "../profile-actions";
 import NoData from "@/components/shared/no-data";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type users } from "@prisma/client";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { toast } from "sonner";
+import champion from "@/assets/achievements/champion.svg";
+import firstRunnerUp from "@/assets/achievements/first-runner-up.svg";
+import secondRunnerUp from "@/assets/achievements/second-runner-up.svg";
+import bestFemaleProgrammer from "@/assets/achievements/best-female-programmer.svg";
+import type { StaticImageData } from "next/image";
 
-const ACHIEVEMENT_IMAGE_MAP: Record<AchievementType, string> = {
-  CHAMPION: "/assets/champion.svg",
-  FIRST_RUNNER_UP: "/assets/first-runner-up.svg",
-  SECOND_RUNNER_UP: "/assets/second-runner-up.svg",
-  BEST_FEMALE_PROGRAMMER: "/assets/best-female-programmer.svg",
+const ACHIEVEMENT_IMAGE_MAP: Record<AchievementType, StaticImageData> = {
+  CHAMPION: champion,
+  FIRST_RUNNER_UP: firstRunnerUp,
+  SECOND_RUNNER_UP: secondRunnerUp,
+  BEST_FEMALE_PROGRAMMER: bestFemaleProgrammer,
 };
 
 const ACHIEVEMENT_COLOR_MAP: Record<AchievementType, string> = {
@@ -168,7 +172,7 @@ export default function Achievements({ user }: { user: users }) {
                           }}
                         />
                         <img
-                          src={badge.image}
+                          src={badge.image.src}
                           alt={badge.title}
                           className="relative w-20 transition-transform duration-300 group-hover:scale-105"
                           style={{
@@ -199,7 +203,7 @@ export default function Achievements({ user }: { user: users }) {
                           }}
                         />
                         <img
-                          src={badge.image}
+                          src={badge.image.src}
                           alt={badge.title}
                           className="relative w-20 transition-transform duration-300 group-hover:scale-105"
                           style={{
@@ -238,7 +242,7 @@ export default function Achievements({ user }: { user: users }) {
                         }}
                       />
                       <img
-                        src={badge.image}
+                        src={badge.image.src}
                         alt={badge.title}
                         className="relative transition-transform duration-300 group-hover:scale-105"
                         style={{
