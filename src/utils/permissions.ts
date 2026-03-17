@@ -15,7 +15,8 @@ export type actions =
   | "mutate-topic" // edit & delete
   | "view-user-management"
   | "mutate-user" // can change user's information
-  | "generate-leaderboard";
+  | "generate-leaderboard"
+  | "assign-achievements";
 
 const permissions: Record<USER_TYPE, actions[]> = {
   ADMIN: [
@@ -34,6 +35,7 @@ const permissions: Record<USER_TYPE, actions[]> = {
     "mutate-user",
     "view-user-management",
     "generate-leaderboard",
+    "assign-achievements",
   ],
   POWER: [
     "approve-contest",
@@ -47,6 +49,7 @@ const permissions: Record<USER_TYPE, actions[]> = {
     "mutate-problem",
     "mutate-cf-problem",
     "view-user-management",
+    "assign-achievements",
   ],
   STANDARD: ["submit-contest", "submit-problem", "submit-cf-problem"],
 } as const;

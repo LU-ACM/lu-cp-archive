@@ -231,6 +231,20 @@ async function userStepDown() {
   }
 }
 
+async function getUserAchievements(userId: string) {
+  try {
+    const achievements = await prisma.achievements.findMany({
+      where: { user_id: userId },
+      orderBy: [{ year: "desc" }, { month: "desc" }],
+    });
+
+    return { success: true, data: achievements };
+  } catch (error) {
+    console.error("Error fetching user achievements:", error);
+    return { error: "Failed to fetch achievements" };
+  }
+}
+
 export {
   getUserStats,
   updateCFProfile,
@@ -239,4 +253,5 @@ export {
   changeUserType,
   changeUserLeaderboardState,
   userStepDown,
+  getUserAchievements,
 };

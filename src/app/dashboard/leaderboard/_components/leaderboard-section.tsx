@@ -9,10 +9,16 @@ import { useSearchParams } from "next/navigation";
 export default function LeaderboardSection({
   initialDate,
   allowedMonths,
+  otherLBDates,
 }: {
   initialDate: LeaderboardDateType;
   allowedMonths: LeaderboardDateType[];
+  otherLBDates: LeaderboardDateType[];
 }) {
+  const isPreviousLB = otherLBDates.some(
+    (date) => date.year === initialDate.year && date.month === initialDate.month
+  );
+
   const searchParams = useSearchParams();
 
   const [preservedInitialDate] = useState<Date>(
@@ -62,7 +68,10 @@ export default function LeaderboardSection({
         />
       </div>
       <div>
-        <LeaderboardTableWrapper leaderboardDate={leaderboardDate} />
+        <LeaderboardTableWrapper
+          leaderboardDate={leaderboardDate}
+          isPreviousLB={isPreviousLB}
+        />
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import LeaderboardSection from "./_components/leaderboard-section";
 import { notFound, redirect } from "next/navigation";
 import { getLeaderboardDates } from "./leaderboard-actions";
 import { isActionError } from "@/utils/error-helper";
-import { getInitialDate } from "@/components/leaderboard/leaderboard-helper";
+import { formattedLBDates } from "@/components/leaderboard/leaderboard-helper";
 import GenerateLeaderboardLink from "./_components/generate-leaderboard-link";
 
 export type SearchParams =
@@ -34,10 +34,12 @@ export default async function LeaderboardPage({
   if (isActionError(leaderboardDates)) {
     throw new Error("Something went wrong");
   }
+  const { latestLBDate, otherLBDates } = formattedLBDates(
+    leaderboardDates.data,
+    result.data
+  );
 
-  const initialDate = getInitialDate(leaderboardDates.data, result.data);
-
-  if (!initialDate) {
+  if (!latestLBDate) {
     notFound();
   }
 
@@ -52,7 +54,8 @@ export default async function LeaderboardPage({
         <GenerateLeaderboardLink />
       </div>
       <LeaderboardSection
-        initialDate={initialDate}
+        initialDate={latestLBDate}
+        otherLBDates={otherLBDates}
         allowedMonths={leaderboardDates.data}
       />
     </div>

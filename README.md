@@ -103,8 +103,3 @@ Open source - see LICENSE file for details.
 
 - **GitHub Issues** - Report bugs or request features
 - **LU-ACM** - Community support and inquiries
-
----
-
-Last Updated: January 2026  
-Ready for contributions! 🚀

@@ -47,4 +47,13 @@ export type ProblemProgressStats = {
   total: number;
 };
 
+export const AchievementTypeSchema = z.enum([
+  "CHAMPION",
+  "FIRST_RUNNER_UP",
+  "SECOND_RUNNER_UP",
+  "BEST_FEMALE_PROGRAMMER",
+]);
+
+export type AchievementType = z.infer<typeof AchievementTypeSchema>;
+
 export type CFProblem = z.infer<typeof CFProblemSchema>;
