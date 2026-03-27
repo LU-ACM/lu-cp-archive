@@ -143,14 +143,7 @@ export default function Achievements({ user }: { user: users }) {
           {!badges || badges.length === 0 ? (
             <NoData title="Don't worry, keep grinding" />
           ) : (
-            <div
-              className={cn(
-                "grid gap-4",
-                badges.length === 1
-                  ? "grid-cols-1"
-                  : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"
-              )}
-            >
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
               {badges.map((badge) =>
                 badge.extraBadge ? (
                   <button
