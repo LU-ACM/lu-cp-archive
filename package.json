@@ -24,7 +24,7 @@
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
-    "@diceui/tags-input": "^0.7.2",
+    "@diceui/tags-input": "^1.0.0",
     "@hookform/resolvers": "^4.1.2",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",

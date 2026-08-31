@@ -6,6 +6,7 @@ import { type USER_TYPE } from "@/types/types";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     GitHub({
+      checks: ["state"],
       profile(profile) {
         return {
           id: profile.id.toString(),
